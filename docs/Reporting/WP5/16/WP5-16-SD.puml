@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP2B-09: As Librarian I want to know the number of lendings per month for the last 12 months, broken down by genre
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "LendingController" as controller
+participant "LendingService" as service
+participant "LendingRepository" as lendingRepo
+
+http -> controller: GET /api/lending/report
+
+controller -> service: getLendingReport()
+
+service -> lendingRepo: findLendingCountsByMonthAndGenre(oneYearAgo)
+lendingRepo --> service: List<LendingReportDB>
+
+service --> controller: List<LendingReportDB>
+
+controller --> http: OK (200) + body(List<LendingReportDB>)
+
+@enduml

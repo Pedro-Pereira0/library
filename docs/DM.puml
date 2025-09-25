@@ -1,0 +1,43 @@
+@startuml
+'https://plantuml.com/class-diagram
+hide circle
+skinparam classAttributeIconSize 0
+hide methods
+
+title WP3A-11 DM(Register a reader)
+
+class Library{}
+class Anonymous{}
+class Reader{}
+class Lending{}
+class Genre{}
+class Book{}
+class Librarian{}
+class Author{}
+
+
+Anonymous "1" -> "1" Reader: registers as reader
+
+Reader "1" --> "*" Book: View Details
+
+Library "1" -> "0/*" Reader: has readers saved
+Library "1" --> "*" Librarian: has registed
+Library "1" -> "*" Book: will store books
+Library "1" -> "*" Author: will store Authors
+Library "1" -> "*" Genre: will store genres
+
+Reader "1" -> "*" Lending: has lendings
+Lending "*" -> "1" Book: has a book associated
+Librarian "1" --> "*" Lending: will be responsible for the lending
+
+Librarian "*" --> "*" Reader: Applies the fine in case of delay
+Librarian -> Author: manages
+
+Author "1" -> "*" Book: posts/writes the book
+Book "*"->"*" Genre: will have one or more genres
+
+
+
+
+
+@enduml

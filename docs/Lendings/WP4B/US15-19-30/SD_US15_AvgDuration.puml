@@ -1,0 +1,19 @@
+@startuml
+participant "lendingService:LendingService" as Service
+participant "lendingRepo:LendingRepository" as Repo
+
+
+
+@startuml
+participant Service
+participant Repo
+participant Average
+
+Service -> Repo: getAverageDuration()
+Repo --> Service: averageDuration
+
+Service -> Average **: Average(averageDuration, Unit.DAY)
+
+@enduml
+
+

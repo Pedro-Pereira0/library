@@ -1,0 +1,45 @@
+@startuml
+actor HTTP_client as User
+participant LendingController as Controller
+participant "lendingService:LendingService" as Service
+participant "lendingViewMapper:LendingViewMapper" as Mapper
+
+User -> Controller: [GET] getAverageDuration(startDate, endDate, groupBy, page, size)
+Controller -> Service: getAverageDuration(startDate, endDate, groupBy, page, size)
+
+alt startDate == null && endDate == null
+    alt groupBy == null
+        Service -> Service: getAverageDuration()
+        Service --> Controller: average
+        Controller -> Mapper: toAverageView(average)
+        Mapper --> Controller: averageView
+        Controller -> User: ResponseEntity.ok().body(averageView)
+    else if groupBy == "book"
+        Service -> Service: getAverageDurationPerBook(page, size)
+        Service --> Controller: bookAveragePage
+        Controller -> Mapper: toBookAverageListView(bookAveragePage)
+        Mapper --> Controller: bookAverageListView
+        Controller -> User: ResponseEntity.ok().body(bookAverageListView)
+    else
+        Service -> Controller: ResponseEntity.badRequest().body("Group <" + groupBy + "> does not exist!")
+        Controller -> User: ResponseEntity.badRequest().body("Group <" + groupBy + "> does not exist!")
+    end
+else if startDate != null && endDate != null
+    alt groupBy == null
+        Service -> Controller: ResponseEntity.badRequest().body("Time period with no groupBy parameter is not yet implemented!")
+        Controller -> User: ResponseEntity.badRequest().body("Time period with no groupBy parameter is not yet implemented!")
+    else if groupBy == "month,genre"
+        Service -> Service: getAverageDurationPerMonthAndGenre(startDate, endDate, page, size)
+        Service --> Controller: monthGenreAveragePage
+        Controller -> Mapper: toYearMonthGenreAverageListView(monthGenreAveragePage)
+        Mapper --> Controller: yearMonthGenreAverageListView
+        Controller -> User: ResponseEntity.ok().body(yearMonthGenreAverageListView)
+    else
+        Service -> Controller: ResponseEntity.badRequest().body("Group <" + groupBy + "> does not exist!")
+        Controller -> User: ResponseEntity.badRequest().body("Group <" + groupBy + "> does not exist!")
+    end
+else
+    Service -> Controller: ResponseEntity.badRequest().body("Either use both startDate and endDate or none!")
+    Controller -> User: ResponseEntity.badRequest().body("Either use both startDate and endDate or none!")
+end
+@enduml

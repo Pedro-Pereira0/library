@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+autoactivate on
+
+participant ":HTTPClient" as HTTPClient
+participant "handler:RouteHandler" as System
+participant AuthorController as Ctrl
+participant "AuthorServiceImpl" as ServImpl
+participant SpringDataLendingRepository as repo
+
+activate HTTPClient
+
+HTTPClient -> System: GET /top-readers-per-genre
+note over System: after doing some stuff
+System -> Ctrl: getTopReadersPerGenre(genre, startDate, endDate)
+
+Ctrl -> ServImpl: getTopReadersPerGenre(genre, startDate, endDate)
+ServImpl -> repo: getTopReadersPerGenre(genre, startDate, endDate)
+repo --> ServImpl: List<Object[]>
+ServImpl --> Ctrl: List<TopReaderPerGenreDTO>
+Ctrl --> Result**: create(200 OK, jsonObj)
+Ctrl --> System: result
+System -> System: setHttpResult(resp, result)
+System --> System:
+System --> HTTPClient: resp
+
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+title WP2B-08: As Reader I want to search books by title
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "BookController" as controller
+participant "BookService" as service
+participant "BookRepository" as bookRepo
+participant "ViewMapper:BookViewMapper" as vmapper
+participant "CoverUrlUtil" as coverUtil
+
+http -> controller: GET /api/book/search?title={title}
+
+alt params == title
+controller -> service: searchTitle(title, page, limit)
+
+service -> bookRepo: countBooksByTitle(title)
+bookRepo --> service: totalBooks
+
+service -> bookRepo: searchTitle(title, offset, limit)
+bookRepo --> service: books
+
+service --> controller: books
+end
+
+loop for each book
+    controller -> coverUtil: generateSimplifiedCoverUrl(isbn)
+    coverUtil --> controller: coverUrl
+    controller -> bookView: setCoverUrl(coverUrl)
+    bookView --> controller: ok
+end
+
+controller -> vmapper: toBookView(books)
+vmapper --> controller: List<BookDTO>
+
+
+controller --> http: OK (200) + body(List<BookDTO>)
+@enduml

@@ -1,0 +1,91 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP3A-12: As Reader I want to update my personal data UPDATED
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "ReaderController" as controller
+participant "service:ReaderService" as service
+participant "repo:ReadersRepository" as repo
+participant "repo:UserRepository" as repoU
+participant "repo:ReaderPfpRepository" as readerPfpRepo
+participant "mapper:EditReaderMapper" as mapper
+participant "obj:Reader" as obj
+participant "obj:User" as objU
+participant "obj:ReaderProfilePicture" as readerpfp
+participant "mapper:ViewReaderMapper" as vmapper
+
+
+
+http -> controller: PUT updateReader(Principal principal, UpdateReaderRequest request, MultipartFile pfpFile)-api/reader/updateReader
+
+controller -> service:update(username,UpdateReaderRequest request)
+
+service -> repo: getByUsername(username)
+repo --> service: reader
+
+service -> repoU: getById(reader.getUser().getId())
+repoU --> service: user
+
+service->mapper: update(reader, request)
+mapper->obj: update...
+note right
+sets da classe reader
+end note
+obj --> mapper: ok
+mapper -->service: reader
+service -> service:Validate(reader)
+service --> service:ok
+
+service->userU: setFullName(reader.getName())
+userU --> service: ok
+
+service->userU: setPassword(passwordEncoder.encode(request.getPassword()))
+userU --> service: ok
+
+service -> repoU: save(user)
+repoU --> service: user
+
+service -> repo: save(reader)
+repo --> service: reader
+service --> controller: reader
+
+alt if pfpFile isn't null
+
+    controller -> service: updateProfilePic(reader, pfpFile)
+    service -> readerPfpRepo: getByReaderNumber(reader.getReaderNumber())
+    readerPfpRepo --> service: readerpfp
+
+    alt if readerpfp is null
+        service->service: createProfilePic(reader, pfpFile)
+        service --> service: pfpFile
+    else if readerpfp isn't null
+        service -> readerpfp: setImage(pfpFile.getBytes())
+        readerpfp --> service: ok
+    end
+
+
+    service -> readerPfpRepo: save(readerPfp)
+    readerPfpRepo --> service: readerpfp
+    service --> controller: readerpfp
+
+    controller -> vmapper: toViewMapper(reader, readerpfp)
+    vmapper --> controller: ReaderDTO
+    controller --> http: OK (200) + body(ReaderDTO)
+
+else if pfpFile is null
+
+    controller -> vmapper: toViewMapper(reader)
+    vmapper --> controller: ReaderDTO
+    controller --> http: OK (200) + body(ReaderDTO)
+
+end
+
+
+
+
+
+
+@enduml

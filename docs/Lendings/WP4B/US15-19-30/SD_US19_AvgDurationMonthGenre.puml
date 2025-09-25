@@ -1,0 +1,43 @@
+@startuml
+participant "lendingService:LendingService" as Service
+participant "lendingRepo:LendingRepository" as Repo
+
+Service -> Repo: getAverageDurationPerMonthPerGenre(startDate, endDate, pageable)
+Repo --> Service: queryResult
+
+Service -> Service: initialize yearMonthGroupAverageList, monthGroupAverageList, groupAverageList
+Service -> Service: initialize currentMonth and currentYear
+
+loop for each result in queryResult
+    Service -> Service: extract month, year, and average duration
+    Service -> Service: create Average object
+    Service -> Service: create GroupAverage object
+
+    alt currentMonth is null
+        Service -> Service: set currentMonth and currentYear
+    else if currentMonth differs from month
+        Service -> Service: create MonthGroupAverage
+        Service -> Service: clear groupAverageList
+        Service -> Service: update currentMonth
+    end
+
+    Service -> Service: add groupAverage to groupAverageList
+
+    alt currentYear differs from year
+        Service -> Service: create YearMonthGroupAverage
+        Service -> Service: clear monthGroupAverageList
+        Service -> Service: update currentYear
+    end
+end
+
+alt groupAverageList is not empty
+    Service -> Service: create MonthGroupAverage for the remaining groupAverageList
+end
+alt monthGroupAverageList is not empty
+    Service -> Service: create YearMonthGroupAverage for the remaining monthGroupAverageList
+end
+
+Service -> Service: create YearMonthGroupAveragePage object
+Service --> Service: YearMonthGroupAveragePage
+
+@enduml

@@ -1,0 +1,49 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP2A-08:As Librarian I want to update a book’s data.
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "BookController" as controller
+participant "service:BookService" as service
+participant "bookRepo:BookRepository" as bookRepo
+participant "genreRepo:GenreRepository" as genreRepo
+participant "ViewMapper:BookViewMapper" as vmapper
+
+participant "obj:Book" as obj
+
+http -> controller: PUT /api/book/{isbn}
+
+controller -> service: update(isbn, EditBookRequest, ifMatchValue)
+
+service -> bookRepo: findByIsbn(isbn)
+bookRepo --> service: book
+
+service -> genreRepo: findByGenreName(genre)
+genreRepo --> service: genre
+
+service --> obj**: Book(desiredVersion, title, genre, description, author)
+
+service -> obj: setTitle(title)
+obj --> service: ok
+
+service -> obj: setGenre(genre)
+obj --> service: ok
+
+service -> obj: setDescription(description)
+obj --> service: ok
+
+service -> obj: setAuthor(author)
+obj --> service: ok
+
+service -> bookRepo: save(obj)
+bookRepo --> service: ok
+service --> controller: obj
+
+controller -> vmapper: toViewMapper(obj)
+vmapper --> controller: BookDTO
+controller --> http: Ok (200) + body(BookDTO)
+
+@enduml

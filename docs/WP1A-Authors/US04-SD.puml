@@ -1,0 +1,43 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autoactivate on
+autonumber
+
+participant ":HTTPClient" as HTTPClient
+participant "handler:RouteHandler" as System
+participant ":AuthorController" as Ctrl
+participant ":Author" as Person
+participant "service:AuthorService" as Service
+participant "serviceImpl:AuthorServiceImpl" as ServiceImpl
+participant "factory:RepositoryFactory" as Factory
+participant "repo:AuthorRepository" as Repo
+participant "aut:Author" as Author
+participant "result:HttpResult" as Result
+
+activate HTTPClient
+
+HTTPClient -> System: PUT/author/{id}
+note over System: after doing some stuff
+System -> Ctrl:updateAuthor(id, name, shortBio)
+Ctrl -> Person: getAuthorService()
+Person -> Factory : getAuthorRepository()
+Factory --> Person: repo
+Person -->Service**: create(repo)
+Person --> Ctrl: service
+Ctrl -> Service: updateAuthor(id, name, shortBio)
+Service -> ServiceImpl: updateAuthor(authorId, name, shortBio)
+ServiceImpl -> Repo: findById(authorId)
+Repo --> ServiceImpl: aut
+ServiceImpl -> Author: updateAuthor(name, shortBio)
+Author --> ServiceImpl : ok
+ServiceImpl -> Repo: save(aut)
+Repo --> ServiceImpl: ok
+ServiceImpl --> Service: ok
+Service --> Ctrl: ok
+Ctrl --> Result**: create(200)
+Ctrl --> System: result
+System -> System: setHttpResult(resp, result)
+System --> System:
+System --> HTTPClient: resp
+@enduml

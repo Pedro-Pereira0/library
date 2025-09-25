@@ -1,0 +1,24 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP4.7-27: As Reader I want to search books by author
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "LendingController" as controller
+participant "LendingService" as service
+participant "LendingRepository" as lendingRepo
+
+http -> controller: GET /api/lending/report
+
+controller -> service: getLendingReport()
+
+service -> lendingRepo: findLendingCountsByMonthAndGenre(oneYearAgo)
+lendingRepo --> service: List<LendingReportDB>
+
+service --> controller: List<LendingReportDB>
+
+controller --> http: OK (200) + body(List<LendingReportDB>)
+
+@enduml

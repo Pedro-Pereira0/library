@@ -1,0 +1,69 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP3B-12:As anonymous I want to register as a reader with an optional photo, and optional list of interest UPDATED
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "AuthAPI" as controller
+participant "service:ReaderService" as service
+participant "Mapper:ReaderEditMapper" as mapper
+participant "ViewMapper: ReaderViewMapper" as vmapper
+participant "ReaderNumber" as ReaderNumber
+participant "repo:ReadersRepository" as repo
+participant "repo:UserRepository" as repoU
+participant "repo:ReaderPfpRepository" as readerPfpRepo
+participant "obj:User" as objU
+participant "obj:Reader" as obj
+
+http -> controller: POST registerReader(createReaderRequest request, MultipartFile pfpFile)- api/auth/registerReader
+
+controller -> service:create(createReaderRequest request)
+
+service->mapper: create(request)
+mapper --> obj**:Reader(name, email(username), dateOfBirth, phoneNumber, GDPRconsent, password)
+
+mapper --> service: reader
+
+service -> service:Validate(reader)
+service --> service:ok
+
+service --> ReaderNumber**:
+service->ReaderNumber:getNextReaderNumber(repo)
+ReaderNumber -> repo:getLastReaderNumber()
+repo-->ReaderNumber: readerNumber
+ReaderNumber --> service: long
+
+service->ReaderNumber:generate(long)
+ReaderNumber --> service: String:readerNumber
+service -> obj: setReaderNumber(readerNumber)
+obj--> service: ok
+
+service -> objU**: User.newUser(reader.getName(), passwordEncoder.encode(request.getPassword()),reader.getName(),Role.READER)
+objU --> service: objU
+service -> repoU: save(objU)
+repoU --> service: user
+
+service -> repo: save(reader)
+repo--> service: reader
+service --> controller: reader
+
+alt if pfpFile isn't null
+controller -> service: createProfilePic(obj, pfpFile)
+service -> readerPfp**: readerPfp(obj(reader), pfpFile.bytes, pfpFile.content-type, pfp.name, downloadUri)
+service -> readerPfpRepo: save(readerPfp)
+readerPfpRepo --> service:ok
+service --> controller: readerPfp
+
+controller -> vmapper: toViewMapper(obj, pfpFile)
+vmapper --> controller: ReaderDTO
+controller --> http: CREATED (201) + body(ReaderDTO)
+
+else if pfpFile is null
+
+controller -> vmapper: toViewMapper(obj)
+vmapper --> controller: ReaderDTO
+controller --> http: CREATED (201) + body(ReaderDTO)
+end
+@enduml

@@ -1,0 +1,50 @@
+@startuml
+title "As Reader I want to know the co-authors of an author and their respective books"
+autoactivate on
+autonumber
+
+participant ":HTTPClient" as HTTPClient
+participant "handler:RouteHandler" as System
+participant "AuthorController" as Ctrl
+participant "AuthorServiceImpl" as ServiceImpl
+participant "AuthorRepository" as authorRepo
+participant "BookRepository" as bookRepo
+participant "result:HttpResult" as Result
+
+activate HTTPClient
+
+HTTPClient -> System: GET /coAuthors/{authorName}
+note over System: after doing some stuff
+
+System -> Ctrl: getCoAuthorsAndBooks(authorName)
+
+Ctrl -> ServiceImpl: getCoAuthorsAndBooks(authorName)
+
+ServiceImpl -> bookRepo: findCoAuthorsAndBooks(authorName)
+
+bookRepo --> ServiceImpl: List<Book>
+
+note over ServiceImpl: Process books and co-authors
+
+ServiceImpl -> CoAuthorResponse: Create CoAuthorResponse objects
+
+CoAuthorResponse --> ServiceImpl: List<CoAuthorResponse>
+
+loop for each book
+  ServiceImpl -> BookResponse: Create BookResponse object
+  activate CoAuthorResponse
+  BookResponse --> CoAuthorResponse: Add to CoAuthorResponse
+  deactivate CoAuthorResponse
+end
+
+
+ServiceImpl --> Ctrl: List<CoAuthorResponse>
+
+Ctrl --> Result**: create(200 OK, jsonObj)
+Ctrl --> System: result
+System -> System: setHttpResult(resp, result)
+System --> System:
+System --> HTTPClient: resp
+
+
+@enduml

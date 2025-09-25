@@ -1,0 +1,26 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP2A-10:As Librarian I want to know the Top 5 genres
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "BookController" as controller
+participant "service:BookService" as service
+participant "bookRepo:BookRepository" as bookRepo
+
+http -> controller: GET /api/book/topgenres
+controller -> service: getTopGenres()
+
+service -> bookRepo: getTopGenres()
+bookRepo --> service: List<Object[]>
+
+
+service -> service: map List<TopGenreDTO>
+deactivate
+service --> controller: List<TopGenreDTO>
+
+controller --> http: Ok (200) + body(List<TopGenreDTO])
+
+@enduml

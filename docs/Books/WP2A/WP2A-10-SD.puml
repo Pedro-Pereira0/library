@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP2A-10:As Librarian or Reader I want to search books by genre.
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "BookController" as controller
+participant "service:BookService" as service
+participant "bookRepo:BookRepository" as bookRepo
+participant "ViewMapper:BookViewMapper" as vmapper
+
+http -> controller: GET /api/book/search?genre={genre}
+
+controller -> service: search(genre)
+
+service -> bookRepo: searchGenre(genre)
+bookRepo --> service: books
+
+
+service --> controller: books
+
+controller -> vmapper: toViewMapper(books)
+vmapper --> controller: BooksDTO
+controller --> http: Ok (200) + body(BooksDTO)
+
+@enduml

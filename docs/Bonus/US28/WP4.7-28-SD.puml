@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title 4.7 - US28: As Librarian I want to search Readers by phone number
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "ReaderController" as controller
+participant "service:ReaderService" as service
+participant "objVal: phoneNumberVal" as val
+participant "repo:ReadersRepository" as repo
+participant "obj:Reader" as obj
+participant "mapper:ReaderMapper" as mapper
+
+
+http -> controller: GET searchReaders(Pagination Request, @Param phoneNumber)-api/reader/search
+
+
+controller -> service:getReaderByPhoneNumber(request.getPage(), phoneNumber)
+
+service -> val: validate(phoneNumber)
+val --> service: ok
+
+service -> repo: getReaderByPhoneNumber(phoneNumber, pageable)
+repo --> service: readers
+service --> controller: readers
+
+controller -> mapper: toViewMapper(readers)
+mapper --> controller: ReadersDTO
+controller --> http: OK (200) + body(ReadersDTO)
+
+
+
+@enduml

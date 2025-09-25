@@ -1,0 +1,60 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+HTTP_client -> LendingController: [POST] lend(LendRequest resource)
+LendingController -> "lendingService:LendingService": lend(resource)
+
+"lendingService:LendingService" -> "lendRequest:LendRequest": getIsbn
+"lendRequest:LendRequest" --> "lendingService:LendingService": isbn
+
+"lendingService:LendingService" -> "lendRequest:LendRequest": getReaderNumber
+"lendRequest:LendRequest" --> "lendingService:LendingService": readerNumber
+
+"lendingService:LendingService" -> "repository:BookRepository": findByIsbn(isbn)
+"repository:BookRepository" --> "lendingService:LendingService": book
+
+
+
+"lendingService:LendingService" -> "repository:LendingRepository": findActiveByIsbn(isbn)
+"repository:LendingRepository" --> "lendingService:LendingService": null
+
+"lendingService:LendingService" -> "repository:ReaderRepository": findByReaderNumber(readerNumber)
+"repository:ReaderRepository" --> "lendingService:LendingService": true
+
+"lendingService:LendingService" -> "repository:LendingRepository": findByReaderNumber(readerNumber)
+"repository:LendingRepository" --> "lendingService:LendingService": lendings
+
+loop over Set<Lending>
+"lendingService:LendingService" -> "lending:Lending": isItOverdue(currentDate)
+"lending:Lending" --> "lendingService:LendingService": false
+end
+
+"lendingService:LendingService" -> "repository:LendingRepository": findMaxLendingNumber()
+"repository:LendingRepository" --> "lendingService:LendingService": maxSequenceNumber
+
+"lendingService:LendingService" -> "book:Book": getTitle()
+"repository:BookRepository" --> "lendingService:LendingService": bookTitle
+
+alt maxSequenceNumber == null
+    "lendingService:LendingService" -> "createLendingMapper:LendingCreateMapper": create(resource, bookTitle)
+    "createLendingMapper:LendingCreateMapper" -> lending ** : Lending(isbn, readerNumber, bookTitle)
+else
+    "lendingService:LendingService" -> "createLendingMapper:LendingCreateMapper": create(resource, maxSequenceNumber, bookTitle)
+    "createLendingMapper:LendingCreateMapper" -> lending ** : Lending(isbn, readerNumber, maxSequenceNumber, bookTitle)
+end
+
+"createLendingMapper:LendingCreateMapper" --> "lendingService:LendingService": lending
+
+"lendingService:LendingService" -> "repository:LendingRepository": save(lending)
+"repository:LendingRepository" --> "lendingService:LendingService": ok
+
+"lendingService:LendingService" --> LendingController: lending
+LendingController -> "lendingViewMapper:LendingViewMapper": toCreateViewMapper(lending)
+"lendingViewMapper:LendingViewMapper" --> LendingController: lendingDTO
+LendingController --> HTTP_client: CREATED (201) + body(lendingDTO)
+
+
+
+@enduml

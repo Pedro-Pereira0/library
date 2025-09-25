@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP3A-14: As Librarian I want to search Readers by name UPDATED
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "ReaderController" as controller
+participant "service:ReaderService" as service
+participant "repo:ReadersRepository" as repo
+participant "obj:nameVal" as val
+participant "obj:Reader" as obj
+participant "mapper:ReaderMapper" as mapper
+
+
+http -> controller: GET searchReaders(PaginationRequest request, @param name)-api/reader/search
+
+controller -> service:getReaderByName(request.getPage(), name)
+
+service -> val: validate(name)
+val --> service: ok
+
+service -> repo: getReaderByName(page, name)
+repo --> service: readers
+
+service --> controller: readers
+
+controller -> mapper: toViewMapper(readers)
+mapper --> controller: ReadersDTO
+controller --> http: OK (200) + body(ReadersDTO)
+
+
+
+@enduml

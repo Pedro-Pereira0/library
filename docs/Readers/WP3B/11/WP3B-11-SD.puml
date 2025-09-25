@@ -1,0 +1,30 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP3B-11: As Librarian I want to know the Top 5 readers
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "ReaderController" as controller
+participant "service:ReaderService" as service
+participant "repo:LendingRepository" as repo
+participant "obj:Reader" as obj
+participant "mapper:ReaderMapper" as mapper
+
+
+http -> controller: GET api/reader/getTopReaders
+
+controller -> service:getTopReaders()
+
+service -> repo: getTopReaders()
+repo --> service: readersList
+
+service --> controller: readersList
+
+controller -> mapper: toViewMapper(readersList)
+mapper --> controller: ReadersDTO
+controller --> http: OK (200) + body(ReadersDTO)
+
+
+@enduml

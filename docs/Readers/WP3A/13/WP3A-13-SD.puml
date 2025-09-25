@@ -1,0 +1,34 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP3A-13: As Librarian I want to know a user’s detail given its reader number
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "ReaderController" as controller
+participant "service:ReaderService" as service
+participant "repo:ReadersRepository" as repo
+participant "obj:Reader" as obj
+participant "mapper:ReaderMapper" as mapper
+
+
+http -> controller: GET getReaderByReaderNumber(readerNumber(year/number))-api/reader/{year}/{id}/profile
+
+controller -> service:getReaderByReaderNumber(readerNumber)
+
+service -> repo: getReaderByReaderNumber(readerNumber)
+repo --> service: reader
+
+
+service --> controller: reader
+
+controller -> mapper: toViewMapper(reader)
+mapper --> controller: ReaderDTO
+controller --> http: OK (200) + body(ReaderDTO)
+
+
+
+
+
+@enduml

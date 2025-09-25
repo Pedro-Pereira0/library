@@ -1,0 +1,48 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+participant HTTP_client as User
+participant LendingController as Controller
+participant "lendingService:LendingService" as Service
+participant "repository:LendingRepository" as Repo
+participant "lendingViewMapper:LendingViewMapper" as Mapper
+
+
+User -> Controller: [GET] getAverageNumber(month, year, groupBy, page, size)
+Controller -> Service: getAverageNumber(month, year, groupBy, page, size)
+
+alt month != null && year != null && groupBy != null
+    Service -> Service: getAverageNumberPerGender(month, year, page, size)
+    alt validYear && validMonth
+        Service -> Service: calculate startDate and endDate
+        Service -> Repo: findLendingCountsPerGenreForMonth(startDate, endDate, pageable)
+        Repo --> Service: queryResult
+        alt queryResult not empty
+            Service -> Service: map queryResult to groupAverageList
+            Service -> Controller: GroupAveragePage
+            Controller -> Mapper: toGenreAveragePageView(GroupAveragePage)result)
+            Mapper --> Controller: GroupAveragePageDTO
+            Controller --> User: SUCCESS (200) + body(GroupAveragePageDTO)
+        else queryResult empty
+            Service -> Service: throw NotFoundException
+            Service -> Controller: NotFoundException
+            Controller --> User: NotFoundException
+        end
+    else
+        Service -> Service: throw BadRequestException("Request must have a valid month and year!")
+        Service -> Controller: BadRequestException
+        Controller --> User: BadRequestException
+    end
+
+else
+    Service -> Service: throw BadRequestException("Month, year and groupBy parameters are required!")
+    Controller --> User: BadRequestException
+end
+
+
+
+
+
+
+@enduml

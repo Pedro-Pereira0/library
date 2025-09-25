@@ -1,0 +1,42 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP5-18: As Librarian I want to know the Monthly lending per reader of a certain period
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "LendingController" as controller
+participant "service:LendingService" as service
+participant "repo:LendingRepository" as repo
+participant "repo:ReaderRepository" as readerRepo
+
+participant "mapper:LendingMapper" as mapper
+
+
+http -> controller: GET getMonthlyLendingPerReader(PaginationRequest request, @param startDate, @param endDate) - api/lending/getMonthlyLendingPerReader
+
+controller -> service:getMonthlyLendingPerReader(LocalDate startDate, LocalDate endDate, Page page)
+
+service -> readerRepo: getAll(pageable)
+readerRepo --> service: readers
+
+service -> repo: getDatesAfterCertainDate(startDate, endDate)
+repo --> service: datesList
+loop j:readers
+    loop i : datesList
+    service -> repo: getLendingsMonth(startDateMonth, endDateMonth)
+    repo --> service: lendingsMonth
+
+    service->reportMonthlyLending**: reportMonthlyLending(datesList(i), lendingsMonth)
+    end
+end
+
+service --> controller: reports
+
+controller -> mapper: toReportMonthlyLendingPerReaderView(reports)
+mapper --> controller: reportsDTO
+controller --> http: OK (200) + body(reportsDTO)
+
+
+@enduml

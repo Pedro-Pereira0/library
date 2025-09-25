@@ -1,0 +1,42 @@
+@startuml
+title "As Librarian I want to register an author with an optional photo"
+
+'https://plantuml.com/sequence-diagram
+autoactivate on
+autonumber
+
+participant ":HTTPClient" as HTTPClient
+participant "handler:RouteHandler" as System
+participant ":AuthorController" as Ctrl
+participant "result:HttpResult" as Result
+participant "AuthorServiceImpl" as ServiceImpl
+participant "repo:AuthorRepository" as Repo
+participant "photo:MultipartFile" as Photo
+participant "aut:Author" as Author
+
+
+
+activate HTTPClient
+
+HTTPClient -> System: PUT /authors/{id}(id, data, photo)
+
+note over System: after doing some stuff
+
+System -> Ctrl: updateAuthor(id, data, photo)
+Ctrl -> ServiceImpl: updateAuthor(id, data, photo)
+ServiceImpl -> Repo: findById(authorId)
+Repo --> ServiceImpl: Author entity
+ServiceImpl -> Author**: setName(data) and setShortBio(data)
+ServiceImpl -> Photo: savePhoto(photo, authorId)
+Photo --> ServiceImpl: photoResponse
+ServiceImpl -> Author: setPhotoPath(photoResponse) and setPhotoURL(photoResponse)
+ServiceImpl -> ServiceImpl : validate(aut)
+ServiceImpl -> Repo: update(aut)
+Repo --> ServiceImpl : ok
+ServiceImpl --> Ctrl: ok
+Ctrl -> Result**: update(200 OK)
+Ctrl --> System: result
+System -> System: setHttpResult(resp, result)
+System --> System:
+System --> HTTPClient: resp
+@enduml

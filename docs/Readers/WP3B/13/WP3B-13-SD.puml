@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP3B-13: As Reader I want a list of book suggestions based on my interest list
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "ReaderController" as controller
+participant "service:ReaderService" as service
+participant "repo:ReadersRepository" as repo
+participant "repo:BooksRepository" as bookRepo
+participant "obj:Reader" as obj
+participant "mapper:BookMapper" as mapper
+
+
+http -> controller: GET api/reader/getBookSuggestions
+
+controller -> service:getBookSuggestions(page, username)
+
+service -> repo: getByUsername(username)
+repo --> service: reader
+alt if reader.getInterestList() is null
+    service -> bookRepo: getTopGenres()
+    bookRepo --> service: interestList
+end
+
+service -> bookRepo: getBookSuggestions(page, interestList)
+bookRepo --> service: bookList
+
+service --> controller: bookList
+
+controller -> mapper: toViewMapper(bookList)
+mapper --> controller: BooksDTO
+controller --> http: OK (200) + body(BooksDTO)
+
+
+
+
+
+@enduml

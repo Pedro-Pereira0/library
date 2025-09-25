@@ -1,0 +1,42 @@
+@startuml
+
+autonumber
+actor HTTP_client as User
+participant LendingController as Controller
+participant "lendingService:LendingService" as Service
+participant "repository:LendingRepository" as Repo
+participant "lendingViewMapper:LendingViewMapper" as Mapper
+
+User -> Controller: [GET] getLendings(isActive, sort, page, size)
+Controller -> Service: getLendings(isActive, sort, page, size)
+
+Service -> Service: create pageable
+alt isActive == null && sort == null
+    Service -> Repo: findAll(pageable)
+    Repo --> Service: lendings
+else isActive != null && sort != null
+    alt isActive
+        alt sort.equals("tardiness")
+            Service -> Repo: findActiveLendingsOrderByTardiness(maxLoanDays, currentDate, pageable)
+            Repo --> Service: lendings
+        else
+            Service -> Service: throw BadRequestException("Sort query does not exist!")
+            Service -> Controller: BadRequestException
+            Controller --> User: BadRequestException
+        end
+    end
+end
+
+Service -> Service: for each lending in lendings, call update()
+Service -> Service: getTotalElements()
+Service -> Service: getNumberOfElements()
+Service -> Service: getNumber()
+Service -> Service: getContent()
+Service -> Service: create LendingPage(totalLendings, pageNumber, pageLendings, lendingList)
+Service -> Controller: LendingPage
+
+Controller -> Mapper: toLendingsView(LendingPage)
+Mapper --> Controller: lendingsView
+Controller -> User: ResponseEntity.ok().body(lendingsView)
+
+@enduml

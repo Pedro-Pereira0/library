@@ -1,0 +1,52 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP2A-07:As Librarian, I want to register a book.
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "BookController" as controller
+participant "service:BookService" as service
+participant "genreRepo:GenreRepository" as genreRepo
+participant "Mapper:BookEditMapper" as mapper
+participant "ViewMapper:BookViewMapper" as vmapper
+participant "bookRepo:BookRepository" as bookRepo
+
+participant "obj:Book" as obj
+
+http -> controller: PUT /api/book/{isbn}
+
+controller -> service:create(String isbn, EditBookRequest resource)
+
+service -> genreRepo: findByGenreName(resource.genre)
+genreRepo --> service: genre
+
+service -> mapper: create(isbn, resource)
+mapper --> obj**: Book(isbn, title, genre, description, author)
+mapper --> service: book
+
+service -> obj: setIsbn(isbn)
+obj --> service: ok
+
+service -> obj: setTitle(title)
+obj --> service: ok
+
+service -> obj: setGenre(genre)
+obj --> service: ok
+
+service -> obj: setDescription(description)
+obj --> service: ok
+
+service -> obj: setAuthor(author)
+obj --> service: ok
+
+service -> bookRepo: save(obj)
+bookRepo --> service: ok
+service --> controller: obj
+
+controller -> vmapper: toViewMapper(obj)
+vmapper --> controller: BookDTO
+controller --> http: Created (201) + body(BookDTO)
+
+@enduml

@@ -1,0 +1,69 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP2B-07: As Librarian, I want to register a book with a book cover photo
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "BookController" as controller
+participant "FileValidationUtil" as fileValidationUtil
+participant "service:BookService" as service
+participant "genreRepository:GenreRepository" as genreRepo
+participant "authorRepository:AuthorRepository" as authorRepo
+participant "Mapper:BookEditMapper" as mapper
+participant "ViewMapper:BookViewMapper" as vmapper
+participant "fileStorageService:FileStorageService" as fileStorage
+participant "CoverUrlUtil" as coverUtil
+participant "bookRepository:BookRepository" as bookRepo
+participant "obj:Book" as obj
+
+http -> controller: PUT /api/book/{isbn}
+
+alt ifMatchValue is null or empty
+controller -> fileValidationUtil: validateCoverFile(coverFile)
+controller <-- fileValidationUtil: ok
+
+controller -> service:create(String isbn, EditBookRequest resource)
+
+service -> genreRepo: findByGenreName(resource.genre)
+genreRepo --> service: genre
+
+service -> authorRepo: findByName(resource.author)
+authorRepo --> service: Optional<Author>
+
+service -> mapper: create(isbn, resource)
+mapper --> obj**: Book(isbn, title, genre, description, authors, coverUrl)
+mapper --> service: book
+
+service -> obj: setTitle(title)
+obj --> service: ok
+
+service -> obj: setGenre(genre)
+obj --> service: ok
+
+service -> obj: setDescription(description)
+obj --> service: ok
+
+service -> obj: setAuthor(authors)
+obj --> service: ok
+
+alt coverFile is not null and not empty
+    service -> fileStorage: storeFile(isbn, resource.coverFile)
+    fileStorage --> service: filename
+    service -> coverUtil: generateSimplifiedCoverUrl(isbn)
+    coverUtil --> service: coverUrl
+    service -> obj: setCoverUrl(coverUrl)
+    obj --> service: ok
+end
+
+service -> bookRepo: save(book)
+bookRepo --> service: obj
+
+service --> controller: obj
+end
+controller -> vmapper: toBookView(obj)
+vmapper --> controller: BookDTO
+controller --> http: Created (201) + body(BookDTO) with ETag
+
+@enduml

@@ -1,0 +1,41 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP2A-09:As Librarian I want to know the Top 5 books lent
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "BookController" as controller
+participant "service:BookService" as service
+participant "lendingRepo:LendingRepository" as lendingRepo
+participant "bookRepository:BookRepository" as bookRepo
+participant "CoverUrlUtil" as coverUtil
+participant "ViewMapper:BookViewMapper" as vmapper
+
+http -> controller: GET /api/book/topgenres
+controller -> service: getTopGenres()
+
+service -> lendingRepo: getTopBooksLent()
+lendingRepo --> service: List<Object[]>
+
+loop result in results
+service -> bookRepo: findByIsbn(result[0])
+bookRepo --> service: Book
+alt book has coverUrl
+service -> coverUtil: generateSimplifiedCoverUrl(isbn)
+coverUtil --> service: coverUrl
+end
+service -> service: create SimplifiedBookDTO
+deactivate
+service -> service: create TopBookLentDTO
+deactivate
+end
+service --> controller: List<TopBookLentDTO>
+
+controller -> vmapper: toViewMapper(List<TopBookLentDTO>)
+vmapper --> controller: List<BookDTO>
+
+controller --> http: Ok (200) + body(List<BookDTO>)
+
+@enduml

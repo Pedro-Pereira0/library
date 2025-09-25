@@ -1,0 +1,28 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP2A-09:As Librarian or Reader I want to know the details of a book given its ISBN
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "BookController" as controller
+participant "service:BookService" as service
+participant "bookRepo:BookRepository" as bookRepo
+participant "ViewMapper:BookViewMapper" as vmapper
+
+http -> controller: GET /api/book/{isbn}
+
+controller -> service: find(isbn)
+
+service -> bookRepo: findByIsbn(isbn)
+bookRepo --> service: book
+
+service --> controller: book
+
+controller -> vmapper: toViewMapper(obj)
+vmapper --> controller: BookDTO
+
+controller --> http: Ok (200) + body(BookDTO)
+
+@enduml

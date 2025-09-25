@@ -1,0 +1,29 @@
+@startuml
+title "As Reader I want to know the books of an Author"
+autoactivate on
+autonumber
+
+
+participant ":HTTPClient" as HTTPClient
+participant "handler:RouteHandler" as System
+participant "AuthorController" as Ctrl
+participant "AuthorServiceImpl" as ServiceImpl
+participant "repo:BookRepository" as Repo
+participant "result:HttpResult" as Result
+
+activate HTTPClient
+
+HTTPClient -> System: GET /books/{authorName}
+note over System: after doing some stuff
+System -> Ctrl: getBooksByAuthorName
+Ctrl -> ServiceImpl: getBooksByAuthorName(authorName)
+ServiceImpl -> Repo: findByAuthors(author)
+Repo --> ServiceImpl: List<Book>
+ServiceImpl --> Ctrl: List<Book>
+Ctrl --> Result**: create(200 OK, jsonObj)
+Ctrl --> System: result
+System -> System: setHttpResult(resp, result)
+System --> System:
+System --> HTTPClient: resp
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+title "As Reader, I want to know the Top 5 authors"
+
+autoactivate on
+autonumber
+
+participant ":HTTPClient" as HTTPClient
+participant "handler:RouteHandler" as System
+participant "AuthorController" as Ctrl
+participant "AuthorServiceImpl" as Service
+participant "LendingRepository" as Repository
+participant "result:HttpResult" as Result
+participant "TopAuthor" as TopAuthor
+
+activate HTTPClient
+
+HTTPClient -> System: GET /TopAuthors
+note over System: after doing some stuff
+
+System -> Ctrl: getTopAuthors()
+
+Ctrl -> Service: getTopAuthors()
+
+Service -> Repository: getTopAuthors()
+
+Repository --> Service: List of top authors
+
+Service -> TopAuthor: Create TopAuthor objects
+
+TopAuthor --> Service: List<TopAuthor>
+
+Service --> Ctrl: List<TopAuthor>
+
+Ctrl --> Result**: create(200 OK, jsonObj)
+Ctrl --> System: result
+System -> System: setHttpResult(resp, result)
+System --> System:
+System --> HTTPClient: resp
+
+@enduml

@@ -1,0 +1,16 @@
+@startuml
+participant "lendingService:LendingService" as Service
+participant "lendingRepo:LendingRepository" as Repo
+participant GroupAveragePage
+participant GroupAverages
+
+Service -> Repo: getAverageDurationPerBook(page, size)
+Repo --> Service: queryResult
+
+Service -> GroupAverages **: GroupAverages(queryResult)
+Service -> Service: getTotalElements()
+Service -> Service: getNumberOfElements()
+Service -> Service: getNumber()
+Service -> GroupAveragePage **: GroupAveragePage(totalAverages, pageNumber, pageAverages, groupAverages)
+
+@enduml

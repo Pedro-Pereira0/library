@@ -1,0 +1,59 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+title WP3A-11:As anonymous I want to register as a reader. UPDATED in WP3B-12
+
+autonumber
+autoactivate on
+
+participant "HTTPClient" as http
+participant "AuthAPI" as controller
+participant "service:ReaderService" as service
+participant "Mapper:ReaderEditMapper" as mapper
+participant "ViewMapper: ReaderViewMapper" as vmapper
+participant "ReaderNumber" as ReaderNumber
+participant "repo:ReadersRepository" as repo
+participant "repo:UserRepository" as repoU
+participant "obj:User" as objU
+participant "obj:Reader" as obj
+
+http -> controller: POST registerReader(createReaderRequest request, MultipartFile pfpFile)- api/auth/registerReader
+
+controller -> service:create(createReaderRequest request)
+
+service->mapper: create(request)
+mapper --> obj**:Reader(name, email(username), dateOfBirth, phoneNumber, GDPRconsent, password)
+
+mapper --> service: obj
+
+service -> service:Validate(obj)
+service --> service:ok
+
+service --> ReaderNumber**:
+service->ReaderNumber:getNextReaderNumber(repo)
+ReaderNumber -> repo:getLastReaderNumber()
+repo-->ReaderNumber: readerNumber
+ReaderNumber --> service: long
+
+service->ReaderNumber:generate(long)
+ReaderNumber --> service: String:readerNumber
+service -> obj: setReaderNumber(readerNumber)
+obj--> service: ok
+
+service -> objU**: User.newUser(reader.getName(), passwordEncoder.encode(request.getPassword()),reader.getName(),Role.READER)
+objU --> service: objU
+service -> repoU: save(objU)
+repoU --> service: ok
+
+service -> repo: save(obj)
+repo--> service:ok
+service --> controller: obj
+
+
+
+controller -> vmapper: toViewMapper(obj)
+vmapper --> controller: ReaderDTO
+controller --> http: CREATED (201) + body(ReaderDTO)
+
+
+
+@enduml

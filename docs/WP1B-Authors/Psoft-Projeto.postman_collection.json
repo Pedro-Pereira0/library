@@ -1,0 +1,1550 @@
+{
+	"info": {
+		"_postman_id": "0b2f20d9-b510-4626-8261-995ebe6b4324",
+		"name": "Psoft-Projeto",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25227914"
+	},
+	"item": [
+		{
+			"name": "Logins",
+			"item": [
+				{
+					"name": "Admin Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Authtenticates\", function(){\r",
+									"\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"    let token = postman.getResponseHeader(\"Authorization\");\r",
+									"    pm.environment.set(\"adminToken\", token);\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"ranheta1@mail.com\", \r\n    \"password\": \"facada\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{baseUrl}}/login",
+							"host": [
+								"{{host}}{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Librarian Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Authtenticates\", function(){\r",
+									"\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"    let token = postman.getResponseHeader(\"Authorization\");\r",
+									"    pm.environment.set(\"librarianToken\", token);\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"u1@mail.com\", \r\n    \"password\": \"Password1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{baseUrl}}/login",
+							"host": [
+								"{{host}}{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Librarian2 Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Authtenticates\", function(){\r",
+									"\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"    let token = postman.getResponseHeader(\"Authorization\");\r",
+									"    pm.environment.set(\"librarian2Token\", token);\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"mary@mail.com\", \r\n    \"password\": \"Password1\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{baseUrl}}/login",
+							"host": [
+								"{{host}}{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Reader Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Authtenticates\", function(){\r",
+									"\r",
+									"    pm.response.to.have.status(200);\r",
+									"\r",
+									"    let token = postman.getResponseHeader(\"Authorization\");\r",
+									"    pm.environment.set(\"readerToken\", token);\r",
+									"\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"mary4@mail.com\", \r\n    \"password\": \"myMy123!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}{{baseUrl}}/login",
+							"host": [
+								"{{host}}{{baseUrl}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "WP1A - Author",
+			"item": [
+				{
+					"name": "US03",
+					"item": [
+						{
+							"name": "Author Register",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"    pm.expect(pm.response.code).to.equal(201);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"  pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response body has the required fields based on the schema validation\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData).to.have.property('id');",
+											"    pm.expect(responseData).to.have.property('name');",
+											"    pm.expect(responseData).to.have.property('shortBio');",
+											"",
+											"});",
+											"",
+											"pm.test('Name is in a valid format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData.name).to.be.a('string');",
+											"});",
+											"",
+											"pm.test('ShortBio is in a valid format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData.shortBio).to.be.a('string');",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "John Doe",
+											"type": "text"
+										},
+										{
+											"key": "shortBio",
+											"value": "<b>Este é um parágrafo de exemplo.</b>",
+											"type": "text"
+										},
+										{
+											"key": "photo",
+											"type": "file",
+											"src": "postman-cloud:///1ef2291e-871f-4740-a0a7-e8652898ae6b"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Register Sem Imagem",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"    pm.expect(pm.response.code).to.equal(201);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"  pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response body has the required fields based on the schema validation\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData).to.have.property('id');",
+											"    pm.expect(responseData).to.have.property('name');",
+											"    pm.expect(responseData).to.have.property('shortBio');",
+											"",
+											"});",
+											"",
+											"pm.test('Name is in a valid format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData.name).to.be.a('string');",
+											"});",
+											"",
+											"pm.test('ShortBio is in a valid format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData.shortBio).to.be.a('string');",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "John Doe",
+											"type": "text"
+										},
+										{
+											"key": "shortBio",
+											"value": "<b>Este é um parágrafo de exemplo.</b>",
+											"type": "text"
+										},
+										{
+											"key": "photo",
+											"type": "file",
+											"src": []
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Register Copy",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								},
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {",
+											"    pm.expect(pm.response.code).to.equal(201);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"  pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response body has the required fields based on the schema validation\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData).to.have.property('id');",
+											"    pm.expect(responseData).to.have.property('name');",
+											"    pm.expect(responseData).to.have.property('shortBio');",
+											"",
+											"});",
+											"",
+											"pm.test('Name is in a valid format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData.name).to.be.a('string');",
+											"});",
+											"",
+											"pm.test('ShortBio is in a valid format', function () {",
+											"    const responseData = pm.response.json();",
+											"    pm.expect(responseData.shortBio).to.be.a('string');",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"John Doe\",\r\n    \"shortBio\": \"<b>Este é um parágrafo de exemplo.</b>\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Register -  Um dos campos obrigatórios esta vazio",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(201);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Jose Armindo\",\r\n    \"shortBio\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Register - A shortBio tem mais de 4096 caracteres",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(201);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarian2Token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Jose Armindo\",\r\n    \"shortBio\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet risus neque. Donec suscipit mauris ac sapien vestibulum commodo. Sed sit amet ultricies metus. Curabitur consectetur felis id magna interdum, nec hendrerit nunc varius. Mauris auctors nisi nec magna viverra, ut gravida elit luctus. Fusce aliquam purus id libero sollicitudin, ids suscipit ipsum vehicula. Nullam quis semper ipsum. Mauris quis massa fermentum, malesuada metus at, fringilla odio. Ut consequat vehicula odio nec egestas. Nulla facilisi. Duis consequat, dui nec scelerisque congue, quam justo aliquet ante, sed malesuada libero ligula nec ipsum. Ut vitae sem vel tortor tincidunt hendrerit. Sed sit amet velit id odio consequat fermentum vel sed purus. Vivamus consequat, odio non vulputate suscipit, purus leo efficitur sem, in lacinia tortor magna ut turpis. Curabitur rutrum condimentum nisi, vel malesuada leo. Cras rutrum mi vel nunc consequat sollicitudin. Vivamus aliquam, justo nec fringilla ultricies, urna ligula elementum mi, a molestie sapien tortor at elit. Fusce vestibulum bibendum sapien, in ultricies leo malesuada a. Sed sit amet fringilla ligula. Proin tempor mauris nec vehicula sagittis. Morbi eu leo eget libero ultrices lobortis. Proin eget semper justo. Maecenas ut enim et ipsum egestas eleifend. Vestibulum eu leo tincidunt, pellentesque elit nec, sollicitudin nulla. Cras feugiat, mi a lobortis cursus, lorem purus fringilla turpis, sit amet fermentum neque dolor ac arcu. Etiam at magna auctor, iaculis mauris et, vulputate ligula. Morbi tincidunt sodales lectus, a commodo eros suscipit at. Pellentesque id efficitur odio, nec interdum enim. Sed ullamcorper sem ac mauris euismod, sed fermentum nulla condimentum. Maecenas ultricies vehicula dui, et aliquet nisi mollis at. Aliquam in est vel eros blandit viverra. In ac orci dolor. Sed eget elit eget sapien tempus faucibus. In hac habitasse platea dictumst. Mauris interdum aliquet nisl, sit amet aliquet odio fermentum et. Aliquam at odio eu purus lobortis tempus. Nullam viverra neque quis justo euismod, in pulvinar nisi eleifend. Sed commodo, purus sit amet consequat congue, dui tortor suscipit arcu, ut facilisis lorem dolor sed orci. Sed efficitur justo ut lacus viverra, eget congue nisl feugiat. Ut sollicitudin turpis vitae sodales consequat. Suspendisse potenti. Integer volutpat condimentum lacus, nec fermentum urna dignissim eu. Integer hendrerit ipsum vel gravida efficitur. In ultrices nisi eu massa pulvinar malesuada. Maecenas posuere, nulla nec tristique sagittis, quam felis cursus libero, nec auctor magna eros a odio. Integer ut elit justo. Maecenas hendrerit dolor ut ipsum ullamcorper, nec fermentum quam scelerisque. Vivamus auctor, magna id luctus bibendum, quam eros rutrum velit, vel feugiat odio urna id lectus. Curabitur laoreet est ac purus placerat, sit amet vehicula lacus elementum. Duis varius est nec vehicula varius. Integer quis enim non libero suscipit vehicula. Fusce vulputate tortor et lacus scelerisque, vitae feugiat mauris ullamcorper. Curabitur nec enim ut quam ultricies placerat. Donec nec velit non enim blandit posuere. Sed posuere tristique massa, id fermentum magna sollicitudin ac. Aliquam erat volutpat. Phasellus tristique, lectus vitae accumsan tempor, ipsum lectus aliquet velit, vel ultrices justo nisi nec mi. Nulla facilisi. Ut ac malesuada odio. Sed nec nunc fermentum, vehicula odio eget, pharetra velit. Nulla facilisi. Vivamus nec congue nulla. Nam auctor faucibus leo nec varius. Duis lobortis massa non lacus faucibus, nec auctor tortor vestibulum. Sed aliquet, sem eu vulputate vulputate, libero turpis ullamcorper metus, et venenatis ligula mi ac erat. Nam ultricies convallis justo, id posuere risus. Nullam vitae arcu vel nisi ultricies blandit. Integer vehicula feugiat turpis, at eleifend ligula vehicula ac. Morbi sed sapien magna. Nullam nec tortor nec odio bibendum venenatis. Vivamus viverra congue orci. Vivamus nec sodales elit. Sed nec eros sed nibh aliqasInteger consectetur felis eget odio tempor dapibus.Integer consectetur felis egetasdasdsasdsa\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Register - O nome é um numero",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(201);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarian2Token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": 123,\r\n    \"shortBio\": \"How to master Linux\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Register - O nome tem mais de 150 caracteres",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 201\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(201);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarian2Token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Espaço Extravagante Para Conversas Intermináveis Sobre Qualquer Assunto Que Você Possa Imaginar Com Um Limite De Caracteresssssssssssssssssssssssssssss\",\r\n    \"shortBio\": \"How to master Linux\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "US04",
+					"item": [
+						{
+							"name": "Author Update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.expect(pm.response).to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response has the required fields - id, name, and shortBio\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(responseData).to.be.an('object');\r",
+											"    pm.expect(responseData).to.have.property('id');\r",
+											"    pm.expect(responseData).to.have.property('name');\r",
+											"    pm.expect(responseData).to.have.property('shortBio');\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Id is a non-negative integer\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(responseData.id).to.be.a('number');\r",
+											"    pm.expect(responseData.id).to.be.at.least(0, \"Id should be a non-negative integer\");\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test('Name is in a valid format', function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    pm.expect(responseData.name).to.be.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test('ShortBio is in a valid format', function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    pm.expect(responseData.shortBio).to.be.a('string');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Fábio",
+											"type": "text"
+										},
+										{
+											"key": "shortBio",
+											"value": "",
+											"type": "text"
+										},
+										{
+											"key": "photo",
+											"type": "file",
+											"src": "postman-cloud:///1ef2747a-20bd-4360-a4d3-413ff3ee8d5f"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/1952",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"1952"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Update - O id do Author não existe",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.expect(pm.response).to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Fábio\",\r\n    \"shortBio\": \"\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/400",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"400"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Update - O nome é um numero",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.expect(pm.response).to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"123\",\r\n    \"shortBio\": \"Teste\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/2",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Update - A shortBio tem mais de 4096 caracteres",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.expect(pm.response).to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Teste\",\r\n    \"shortBio\": \"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer sit amet risus neque. Donec suscipit mauris ac sapien vestibulum commodo. Sed sit amet ultricies metus. Curabitur consectetur felis id magna interdum, nec hendrerit nunc varius. Mauris auctors nisi nec magna viverra, ut gravida elit luctus. Fusce aliquam purus id libero sollicitudin, ids suscipit ipsum vehicula. Nullam quis semper ipsum. Mauris quis massa fermentum, malesuada metus at, fringilla odio. Ut consequat vehicula odio nec egestas. Nulla facilisi. Duis consequat, dui nec scelerisque congue, quam justo aliquet ante, sed malesuada libero ligula nec ipsum. Ut vitae sem vel tortor tincidunt hendrerit. Sed sit amet velit id odio consequat fermentum vel sed purus. Vivamus consequat, odio non vulputate suscipit, purus leo efficitur sem, in lacinia tortor magna ut turpis. Curabitur rutrum condimentum nisi, vel malesuada leo. Cras rutrum mi vel nunc consequat sollicitudin. Vivamus aliquam, justo nec fringilla ultricies, urna ligula elementum mi, a molestie sapien tortor at elit. Fusce vestibulum bibendum sapien, in ultricies leo malesuada a. Sed sit amet fringilla ligula. Proin tempor mauris nec vehicula sagittis. Morbi eu leo eget libero ultrices lobortis. Proin eget semper justo. Maecenas ut enim et ipsum egestas eleifend. Vestibulum eu leo tincidunt, pellentesque elit nec, sollicitudin nulla. Cras feugiat, mi a lobortis cursus, lorem purus fringilla turpis, sit amet fermentum neque dolor ac arcu. Etiam at magna auctor, iaculis mauris et, vulputate ligula. Morbi tincidunt sodales lectus, a commodo eros suscipit at. Pellentesque id efficitur odio, nec interdum enim. Sed ullamcorper sem ac mauris euismod, sed fermentum nulla condimentum. Maecenas ultricies vehicula dui, et aliquet nisi mollis at. Aliquam in est vel eros blandit viverra. In ac orci dolor. Sed eget elit eget sapien tempus faucibus. In hac habitasse platea dictumst. Mauris interdum aliquet nisl, sit amet aliquet odio fermentum et. Aliquam at odio eu purus lobortis tempus. Nullam viverra neque quis justo euismod, in pulvinar nisi eleifend. Sed commodo, purus sit amet consequat congue, dui tortor suscipit arcu, ut facilisis lorem dolor sed orci. Sed efficitur justo ut lacus viverra, eget congue nisl feugiat. Ut sollicitudin turpis vitae sodales consequat. Suspendisse potenti. Integer volutpat condimentum lacus, nec fermentum urna dignissim eu. Integer hendrerit ipsum vel gravida efficitur. In ultrices nisi eu massa pulvinar malesuada. Maecenas posuere, nulla nec tristique sagittis, quam felis cursus libero, nec auctor magna eros a odio. Integer ut elit justo. Maecenas hendrerit dolor ut ipsum ullamcorper, nec fermentum quam scelerisque. Vivamus auctor, magna id luctus bibendum, quam eros rutrum velit, vel feugiat odio urna id lectus. Curabitur laoreet est ac purus placerat, sit amet vehicula lacus elementum. Duis varius est nec vehicula varius. Integer quis enim non libero suscipit vehicula. Fusce vulputate tortor et lacus scelerisque, vitae feugiat mauris ullamcorper. Curabitur nec enim ut quam ultricies placerat. Donec nec velit non enim blandit posuere. Sed posuere tristique massa, id fermentum magna sollicitudin ac. Aliquam erat volutpat. Phasellus tristique, lectus vitae accumsan tempor, ipsum lectus aliquet velit, vel ultrices justo nisi nec mi. Nulla facilisi. Ut ac malesuada odio. Sed nec nunc fermentum, vehicula odio eget, pharetra velit. Nulla facilisi. Vivamus nec congue nulla. Nam auctor faucibus leo nec varius. Duis lobortis massa non lacus faucibus, nec auctor tortor vestibulum. Sed aliquet, sem eu vulputate vulputate, libero turpis ullamcorper metus, et venenatis ligula mi ac erat. Nam ultricies convallis justo, id posuere risus. Nullam vitae arcu vel nisi ultricies blandit. Integer vehicula feugiat turpis, at eleifend ligula vehicula ac. Morbi sed sapien magna. Nullam nec tortor nec odio bibendum venenatis. Vivamus viverra congue orci. Vivamus nec sodales elit. Sed nec eros sed nibh aliqasInteger consectetur felis eget odio tempor dapibus.Integer consectetur felis egetasdasdsasdsa\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/2",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author Update - O nome tem mais de 150 caracteres",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.expect(pm.response).to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name\": \"Espaço Extravagante Para Conversas Intermináveis Sobre Qualquer Assunto Que Você Possa Imaginar Com Um Limite De Caracteresssssssssssssssssssssssssssss\",\r\n    \"shortBio\": \"Teste\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/2",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "US05",
+					"item": [
+						{
+							"name": "Author By Number",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Authors endpoint response schema is valid\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(responseData).to.be.an('object');\r",
+											"    \r",
+											"    pm.expect(responseData).to.have.property('name').that.is.a('string');\r",
+											"    pm.expect(responseData).to.have.property('shortBio').that.is.a('string');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Ensure that the response contains the expected fields for author information\", function () {\r",
+											"  const responseData = pm.response.json();\r",
+											"  \r",
+											"  pm.expect(responseData).to.have.property('name');\r",
+											"  pm.expect(responseData).to.have.property('shortBio');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains the expected data for the author with the id '8'\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(responseData).to.not.be.an('array');\r",
+											"    pm.expect(responseData.id.toString()).to.equal('8');\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{readerToken}}",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/1952",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"1952"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author By Number - Numero não existe",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.expect(pm.response.code).to.equal(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{readerToken}}",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/400",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"400"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "US06",
+					"item": [
+						{
+							"name": "Author By Name",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Authors endpoint response schema is valid\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    \r",
+											"    responseData.forEach(function(author) {\r",
+											"        pm.expect(author).to.be.an('object');\r",
+											"        pm.expect(author.name).to.be.a('string');\r",
+											"        pm.expect(author.shortBio).to.be.a('string');\r",
+											"    });\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Ensure that the response contains the expected fields for author information\", function () {\r",
+											"  const responseData = pm.response.json();\r",
+											"  \r",
+											"  pm.expect(responseData).to.be.an('array').that.is.not.empty;\r",
+											"  \r",
+											"  responseData.forEach(function(author) {\r",
+											"    pm.expect(author).to.have.property('name');\r",
+											"    pm.expect(author).to.have.property('shortBio');\r",
+											"\r",
+											"  });\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response contains the expected data for the author with the name 'Fá'\", function () {\r",
+											"    const responseData = pm.response.json();\r",
+											"    \r",
+											"    pm.expect(responseData).to.be.an('array');\r",
+											"    responseData.forEach(function(author) {\r",
+											"        pm.expect(author.name).to.include(\"Fá\");\r",
+											"    });\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{readerToken}}",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors?name=Fábio",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Fábio"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Author By Name Copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"  pm.response.to.have.status(200);\r",
+											"});"
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{readerToken}}",
+										"disabled": true
+									}
+								],
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors?name=io",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "io"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Author List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{librarianToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}{{baseUrl}}/authors",
+							"host": [
+								"{{host}}{{baseUrl}}"
+							],
+							"path": [
+								"authors"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "WP1B - Author",
+			"item": [
+				{
+					"name": "US04",
+					"item": [
+						{
+							"name": "Books By Author(name)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response time is less than 200ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{readerToken}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/books/Nicolau Maquiavel?page=0&size=2",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"books",
+										"Nicolau Maquiavel"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "US05",
+					"item": [
+						{
+							"name": "CoAuthors and their books",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response time is less than 200ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{readerToken}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": []
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/coAuthors/António Vilaça Pacheco?page=0&size=2",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"coAuthors",
+										"António Vilaça Pacheco"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "size",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "US06",
+					"item": [
+						{
+							"name": "Top 5 Authors By Lendings",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response time is less than 200ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{readerToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/TopAuthors",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"TopAuthors"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "WP#5 Reporting",
+					"item": [
+						{
+							"name": "Top Readers Per Genre",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"\r",
+											"pm.test(\"Response time is less than 200ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{readerToken}}"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "genre",
+											"value": "Economia",
+											"type": "text"
+										},
+										{
+											"key": "startDate",
+											"value": "2023-05-25",
+											"type": "text"
+										},
+										{
+											"key": "endDate",
+											"value": "2024-04-22",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/authors/top-readers-per-genre",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"authors",
+										"top-readers-per-genre"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Bonus Use Case",
+					"item": [
+						{
+							"name": "Readers by email",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"\r",
+											"\r",
+											"pm.test(\"Response has the required fields\", function () {\r",
+											"    const responseData = pm.response.json().items[0];\r",
+											"\r",
+											"    pm.expect(responseData).to.include.all.keys('username');\r",
+											"});\r",
+											"\r",
+											"pm.test(\"Response time is less than 200ms\", function () {\r",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+											"});\r",
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {},
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{librarianToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n   \"page\":{\r\n        \"number\":\"1\",\r\n        \"limit\":\"5\"\r\n    },\r\n    \"query\":{\r\n        \"email\":\"mary1@mail.com\"\r\n    }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}{{baseUrl}}/reader/search/email",
+									"host": [
+										"{{host}}{{baseUrl}}"
+									],
+									"path": [
+										"reader",
+										"search",
+										"email"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get Author Pic",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{librarianToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{host}}{{baseUrl}}/authors/1567/authorPicture",
+							"host": [
+								"{{host}}{{baseUrl}}"
+							],
+							"path": [
+								"authors",
+								"1567",
+								"authorPicture"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "Admin Authorization",
+			"value": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJleGFtcGxlLmlvIiwic3ViIjoiMSxyYW5oZXRhMUBtYWlsLmNvbSIsImV4cCI6MTcxNDQ0ODc3OCwiaWF0IjoxNzE0NDEyNzc4LCJyb2xlcyI6IkFETUlOIn0.e7v4iQ4zjGpKnt_SZ-ggn7q5unz5tEwnIV4WoeBjKKJUvQ8-cdMNauh5oTty_I4d0k2t2QpdHmZ27JYBcPykotrFGe_bdPJJNci1vYxYINN6o3AXx7hGMcG2doT1z45ABxmw8LzRTjwY-S0OEuY-Leg8Kiy6pP1s-uoXzkaaHc6kUrNn4CWF0cG2z8UCqKBxO8tnMPeOuNHaH_hrms-Xpc5Jz3gw50TLjbUKqmFn6hVBEaI0cB8WZ23k_2osVHIM8visdkvL7-5X8e1oQkN7mmMTD4659axJDv4kmj1s-xBeVPBzxvuBmVPciNh0xNLjqW1w2P4bFxUOYOqi2fYCzEg5qs9EGenOl5EOPF_lv3kfFJmvh5yGxufLE2ZlG_mZKXiCuQ_fZybGWQCOH-dfS00VLG9LahZQQAsrDTrMQEWBsqkI6rl0BqFeia9OKvxqW25NG2mxU6Pme0SjWHWGBwhvGREIAVdIi9fNaKaLUUyagcytkPmYqk1UEvkRG_cI-61ZJHfaE2IxBfpjXdADMcf9ddjvHJoG5szwZE4Z6q74TdNOfmTIe87FpbPcn3Qu32DMLpA5W3gKUKP-RmoaGGz36u0EAmxdKMMlQHs7DDFUMwiyqh9AAYGBpAlw5lnbYAx7n7k1So2_DZBl52MldMHAA0SZuP6DHEhDQjcej7w"
+		},
+		{
+			"key": "Librarian1 Authorization",
+			"value": "eyJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJleGFtcGxlLmlvIiwic3ViIjoiMix1MUBtYWlsLmNvbSIsImV4cCI6MTcxNDQ0ODk5MiwiaWF0IjoxNzE0NDEyOTkyLCJyb2xlcyI6IkxJQlJBUklBTiJ9.fU7deQ7vfkno_pYc-j92FNynK0NVr-fA991agoro8Dx6UN0E_E_R1OP9hXyRmUO2vrBCVj3yrm2lEuyRZgzm-_JGy4EQa5MX9J_dNlxqzy5Q66yikALFSIIDB9GBN6tWvD_hyFwUOF0Bip_0iipWbxTaXwe7LrpTmj6VGxD1UmcE9lNTjg40ccYBMRtKLK3KRZvVq67lNxQkdZTCUYycp6LfXoxSILg38Snq1l2WzAofz7Lq_DzAxK7DZ9v6CeN4KJggI1Vdzr0frK-Q8vRNKKfuJTnHEXGK0aNrRuFZ59pOrc1NY06nHcL7pet2a18A-_EPEMXF6BVFc7_BgzJL2MFca50nMppHHUmto_arHJUeACyin2HIAspljOKI4kXngXMswAIHTNn6iJd_CKQ5XhP6iMarg_Ggxc8MHEufJSzIj-f08v8L7iMuQqOi2nWqaU8qoW9ulnLfQBT3Zxd50FCh7ZUk7dbnYYBraKaYd7GXcfqzzm6mKSEIW3_Bhu9S_SybALQBmwQ5TU0vBqrgnHqf24whB39z5iK-D-50W_x5E1KY39vDNhP65b5LiaiGFFx3MQKMx2zLyCSlKG-DkCmQZi2OuT63UIypIAfZcItiZEquBbpiZ32MrhlzQIjicW-U5chpZn9GFMJYoNCrP8l3k9MKUlyJDCyLeIbge98"
+		}
+	]
+}

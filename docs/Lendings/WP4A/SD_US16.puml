@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+HTTP_client -> LendingController: [PATCH] returnBook(isbnOrYear, Number, ReturnRequest resource)
+LendingController -> "lendingService:LendingService": returnBook(isbnOrLYear, lNumber, resource, principal)
+
+"lendingService:LendingService" -> "lendingService:LendingService": principal.getName()
+
+"lendingService:LendingService" -> "repository:ReaderRepository": findByReaderUsername(username)
+"repository:ReaderRepository" --> "lendingService:LendingService": reader
+
+"lendingService:LendingService" -> "lendingService:LendingService": getLending(isbnOrYear, Number)
+
+
+"lendingService:LendingService" -> "lending:Lending": getReader.getReaderNumber()
+"lending:Lending" --> "lendingService:LendingService": readerNumberAux
+
+"lendingService:LendingService" -> "lendingService:LendingService": readerNumber == readerNumberaux ?
+"lendingService:LendingService" --> "lendingService:LendingService": true
+
+
+"lendingService:LendingService" -> "returnRequest:ReturnRequest": getComment
+"returnRequest:ReturnRequest" --> "lendingService:LendingService": comment
+
+alt resource != null
+    "lendingService:LendingService" -> "lending:Lending": returnBook(comment)
+    "lending:Lending" -> "lending:Lending": set(comment)
+else
+    "lendingService:LendingService" -> "lending:Lending": returnBook()
+end
+
+
+"lendingService:LendingService" -> "repository:LendingRepository": save(lending)
+"repository:LendingRepository" --> "lendingService:LendingService": ok
+
+"lendingService:LendingService" --> LendingController: lending
+
+LendingController -> "lendingViewMapper:LendingViewMapper": toLendingViewMapper(lending)
+"lendingViewMapper:LendingViewMapper" --> LendingController: lendingDTO
+LendingController --> HTTP_client: SUCCESS (200) + body(lendingDTO)
+
+@enduml

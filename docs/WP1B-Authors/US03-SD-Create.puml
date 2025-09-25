@@ -1,0 +1,39 @@
+@startuml
+title "As Librarian I want to register an author with an optional photo"
+autoactivate on
+autonumber
+
+participant ":HTTPClient" as HTTPClient
+participant "handler:RouteHandler" as System
+participant "AuthorController" as Ctrl
+participant "result:HttpResult" as Result
+participant "AuthorServiceImpl" as ServiceImpl
+participant "AuthorRepository" as Repo
+
+participant "photo:MultipartFile" as Photo
+participant "AuthorEditMapper" as Mapper
+participant "Author" as Aut
+
+activate HTTPClient
+
+HTTPClient -> System: POST/authors(data, photo)
+note over System: after doing some stuff
+System -> Ctrl: postAuthors(name, shortBio, photo)
+Ctrl -> ServiceImpl: createAuthor(name, shortBio, photo)
+ServiceImpl -> Mapper: map(request)
+Mapper --> ServiceImpl: Author
+ServiceImpl --> Aut**: createAuthor(name, shortBio)
+ServiceImpl -> Photo: savePhoto(photo, authorId)
+Photo --> ServiceImpl: photoResponse
+ServiceImpl -> Aut: setPhotoPath(photoResponse) and setPhotoURL(photoResponse)
+deactivate Aut
+ServiceImpl -> ServiceImpl : validate(aut)
+ServiceImpl -> Repo: save(aut)
+Repo --> ServiceImpl : ok
+ServiceImpl --> Ctrl: ok
+Ctrl --> Result**: create(201 Created)
+Ctrl --> System: result
+System -> System: setHttpResult(resp, result)
+System --> System:
+System --> HTTPClient: resp
+@enduml
